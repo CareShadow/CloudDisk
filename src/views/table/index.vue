@@ -4,13 +4,14 @@
       v-loading="listLoading"
       :data="list"
       element-loading-text="Loading"
-      border
+      :border="false"
       fit
       highlight-current-row
     >
       <el-table-column align="center" label="ID" width="95">
         <template slot-scope="scope">
-          {{ scope.$index }}
+          <svg-icon icon-class="file" class-name="custom-class"></svg-icon>name
+          
         </template>
       </el-table-column>
       <el-table-column label="Title">
@@ -20,6 +21,7 @@
       </el-table-column>
       <el-table-column label="Author" width="110" align="center">
         <template slot-scope="scope">
+          <svg-icon icon-class="file" class-name="custom-class"></svg-icon>
           <span>{{ scope.row.author }}</span>
         </template>
       </el-table-column>
@@ -77,3 +79,12 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+.custom-class {
+  display: inline-block;
+  margin-right: 2px;
+  font-size: 18px;
+  vertical-align: middle;
+}
+</style>
