@@ -11,7 +11,6 @@
       <el-table-column align="center" label="ID" width="95">
         <template slot-scope="scope">
           <svg-icon icon-class="file" class-name="custom-class"></svg-icon>name
-          
         </template>
       </el-table-column>
       <el-table-column label="Title">
