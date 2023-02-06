@@ -2,7 +2,7 @@ import axios from "axios";
 import request from "@/utils/request"
 //正常上传
 
-const upload = (url, data, headers = {}) => {
+const upload = (url, data, headers = {}, onProgress) => {
     return request({
         url,
         method: "post",
@@ -10,28 +10,14 @@ const upload = (url, data, headers = {}) => {
         headers: {
             ...headers,
             'Content-Type': 'multipart/form-data'
+        },
+        onUploadProgress: (e) => {
+            
         }
     })
 }
-// const upload = (url, data, headers = {}) => {
-//     return new Promise((resolve, reject) => {
-//         axios({
-//             url,
-//             method: "post",
-//             data,
-//             headers: {
-//                 ...headers,
-//                 'Content-Type': 'multipart/form-data'
-//             }
-//         }).then(res => {
-//             return resolve(res.data)
-//         }).catch(err => {
-//             return reject(err)
-//         })
-//     })
-// }
 //分片上传
-const uploadByPieces = async (url,{ fileName, file }) => {
+const uploadByPieces = async (url, { fileName, file }, onProgress) => {
     // 上传过程中用到的变量
     const chunkSize = 5 * 1024 * 1024; // 5MB一片
     const chunkCount = Math.ceil(file.size / chunkSize); // 总片数
@@ -52,7 +38,15 @@ const uploadByPieces = async (url,{ fileName, file }) => {
                 headers: {
                     'Content-Type': 'multipart/form-data'
                 },
-                baseURL: process.env.VUE_APP_FILE_API
+                baseURL: process.env.VUE_APP_FILE_API,
+                onUploadProgress: (e) => {
+                    e.percent = Number(
+                        (
+                        ((chunkSize * data.get("index") + e.loaded) / file.size) * 100
+                        ).toFixed(2)
+                    )
+                    onProgress(e)
+                }
             }).then(res => {
                 return resolve(res.data)
             }).catch(err => {
@@ -66,18 +60,20 @@ const uploadByPieces = async (url,{ fileName, file }) => {
         let fetchForm = new FormData();
         fetchForm.append("chunk", chunk);
         fetchForm.append("index", index);
+        // 总分片数
         fetchForm.append("chunkCount", chunkCount);
+        
         return uploadChunk(fetchForm)
     };
     // 针对每个文件进行chunk处理
     const promiseList = []
     try {
         for (let index = 0; index < chunkCount; ++index) {
-                promiseList.push(readChunk(index))
+            promiseList.push(readChunk(index))
         }
         const res = await Promise.all(promiseList)
         return res
-    }catch (e) {
+    } catch (e) {
         return e
     }
 }

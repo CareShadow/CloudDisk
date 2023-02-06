@@ -10,7 +10,6 @@
 <script>
 import { mapGetters } from "vuex";
 import { upload, uploadByPieces} from "@/api/upload"
-import { Loading } from "element-ui";
 
 export default {
   name: "Dashboard",
@@ -23,32 +22,30 @@ export default {
     }
   },
   methods: {
-    async uploadFile({ data, file }) {
+    uploadFileProcess(event, file, fileList) {
+        console.log(file)
+    },
+    async uploadFile(options) {
+      const {data, file, onProgress} = options;
+      console.log(options);
+      console.log(file);
       // data是上传时附带的额外参数，file是文件
       let url = "/slice/file"; //上传文件接口
-      let loadingInstance = Loading.service({
-        text: "正在上传文件，请稍后...",
-      });
       try {
         // 如果文件小于5MB，直接上传
         if (file.size < 5 * 1024 * 1024) {
           let formData = new FormData();
-          // for (let key in data) {
-          //   formData.append(key, data[key]);
-          // }
           formData.append("file", file);
-          const res = await upload(url, formData);
+          const res = await upload(url, formData, onProgress);
           loadingInstance.close();
           return res;
         } else {
           // 如果文件大于等于5MB，分片上传
           data.file = file;
-          const res = await uploadByPieces(url, data);
-          loadingInstance.close();
+          const res = await uploadByPieces(url, data, onProgress);
           return res;
         }
       } catch (e) {
-        loadingInstance.close();
         return e;
       }
     },
