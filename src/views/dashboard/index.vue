@@ -12,23 +12,24 @@
         <h2 class="item_h2">66</h2>
       </div>
     </el-card>
-    <div ref="chart">
-      name root
-    </div>
+    <div ref="chart" class="chart"></div>
   </div>
 </template>
 
 <script>
 export default {
   data() {
-    return {};
+    return {
+      chart: {},
+    };
   },
   mounted() {
-    this.chart = this.initCharts();
+    this.initCharts();
   },
   methods: {
     initCharts() {
       this.chart = this.$echarts.init(this.$refs.chart);
+      this.setOptions();
     },
     setOptions() {
       this.chart.setOption({
@@ -100,6 +101,9 @@ export default {
   position: relative;
   top: 20px;
   left: 25px;
+}
+.chart {
+  height: 400px;
 }
 
 /* 基本数据end */
