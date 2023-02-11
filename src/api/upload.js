@@ -1,18 +1,18 @@
 import axios from "axios";
-import request from "@/utils/request"
 //正常上传
 
-const upload = (url, data, headers = {}, onProgress) => {
-    return request({
+const upload = (url, data, onProgress) => {
+    return axios({
         url,
         method: "post",
         data,
         headers: {
-            ...headers,
             'Content-Type': 'multipart/form-data'
         },
+        baseURL: process.env.VUE_APP_FILE_API,
         onUploadProgress: (e) => {
-            
+            e.percent = Number(e.loaded / e.total).toFixed(2);
+            onProgress(e)
         }
     })
 }
@@ -40,6 +40,7 @@ const uploadByPieces = async (url, { fileName, file }, onProgress) => {
                 },
                 baseURL: process.env.VUE_APP_FILE_API,
                 onUploadProgress: (e) => {
+                    console.log(e.loaded, loaded);
                     e.percent = Number(
                         (
                         ((chunkSize * data.get("index") + e.loaded) / file.size) * 100
@@ -71,7 +72,7 @@ const uploadByPieces = async (url, { fileName, file }, onProgress) => {
         for (let index = 0; index < chunkCount; ++index) {
             promiseList.push(readChunk(index))
         }
-        const res = await Promise.all(promiseList)
+        const res = await Promise.all(promiseList);
         return res
     } catch (e) {
         return e
