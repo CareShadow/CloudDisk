@@ -6,13 +6,13 @@ import ElementUI from 'element-ui'
 // 引入echarts核心模块，核心模块提供了echarts使用必须要的接口
 import * as echarts from 'echarts/core'
 // 引入柱状图图表,图标后缀都为Chart
-import { BarChart } from 'echarts/charts'
+import { BarChart, PieChart} from 'echarts/charts'
 // 引入提示框,标题,直角坐标系组件,组件后缀都为Component
-import { TitleComponent, TooltipComponent, GridComponent } from 'echarts/components'
+import { TitleComponent, TooltipComponent, GridComponent, LegendComponent } from 'echarts/components'
 // 引入Canvas  注意引入CanvasRenderer或者SVGRenderer是必须的一步
 import { CanvasRenderer } from 'echarts/renderers';
 // 注册必须的组件
-echarts.use([TitleComponent, TooltipComponent, GridComponent, BarChart, CanvasRenderer])
+echarts.use([TitleComponent, TooltipComponent, GridComponent, LegendComponent, BarChart, PieChart, CanvasRenderer])
 import 'element-ui/lib/theme-chalk/index.css'
 import locale from 'element-ui/lib/locale/lang/en' // lang i18n
 

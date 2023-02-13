@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div class="container w">
     <div class="userLabel">
       <h5>欢迎管理员登陆：test, 当前时间为：{{ new Date() }}</h5>
     </div>
@@ -12,7 +12,18 @@
         <h2 class="item_h2">66</h2>
       </div>
     </el-card>
-    <div ref="chart" class="chart"></div>
+    <div class="file_chart">
+      <div ref="chart" class="chart"></div>
+      <div ref="chart2" class="chart"></div>
+      <div ref="chart3" class="chart"></div>
+    </div>
+    <div class="application_config">
+      <el-table :data="tableData" border style="width: 100%">
+        <el-table-column prop="date" label="系统版本">
+        </el-table-column>
+        <el-table-column prop="address" label="详细数值"> </el-table-column>
+      </el-table>
+    </div>
   </div>
 </template>
 
@@ -20,7 +31,31 @@
 export default {
   data() {
     return {
-      chart: {},
+      data: [
+        { value: 1048, name: "音频文件" },
+        { value: 735, name: "视频文件" },
+        { value: 580, name: "Word文件" },
+        { value: 484, name: "Execl文件" },
+        { value: 300, name: "其他文件" },
+      ],
+      tableData: [
+        {
+          date: "2016-05-02",
+          address: "上海市普陀区金沙江路 1518 弄",
+        },
+        {
+          date: "2016-05-04",
+          address: "上海市普陀区金沙江路 1517 弄",
+        },
+        {
+          date: "2016-05-01",
+          address: "上海市普陀区金沙江路 1519 弄",
+        },
+        {
+          date: "2016-05-03",
+          address: "上海市普陀区金沙江路 1516 弄",
+        },
+      ],
     };
   },
   mounted() {
@@ -29,25 +64,46 @@ export default {
   methods: {
     initCharts() {
       this.chart = this.$echarts.init(this.$refs.chart);
-      this.setOptions();
+      this.chart2 = this.$echarts.init(this.$refs.chart2);
+      this.chart3 = this.$echarts.init(this.$refs.chart3);
+      this.setOptions(this.chart);
+      this.setOptions(this.chart2);
+      this.setOptions(this.chart3);
     },
-    setOptions() {
-      this.chart.setOption({
+    setOptions(chartRef) {
+      chartRef.setOption({
         title: {
-          text: "ECharts 入门示例",
+          text: "文件类型分布情况",
+          left: "center",
+          padding: 20,
         },
-        tooltip: {},
-        xAxis: {
-          data: ["衬衫", "羊毛衫", "雪纺衫", "裤子", "高跟鞋", "袜子"],
+        tooltip: {
+          trigger: "item",
         },
-        yAxis: {},
+        legend: {
+          orient: "vertical",
+          left: "left",
+          padding: 20,
+        },
         series: [
           {
-            name: "销量",
-            type: "bar",
-            data: [5, 20, 36, 10, 10, 20],
+            name: "Access From",
+            type: "pie",
+            radius: "50%",
+            data: this.data,
+            emphasis: {
+              itemStyle: {
+                shadowBlur: 10,
+                shadowOffsetX: 0,
+                shadowColor: "rgba(0, 0, 0, 0.5)",
+              },
+            },
           },
         ],
+      });
+      chartRef.resize({
+        height: 400,
+        width: 596,
       });
     },
   },
@@ -55,6 +111,10 @@ export default {
 </script>
 
 <style scoped>
+/* 未使用响应化布局,下版本进行更新,预计2023年3月1号 */
+.w {
+  width: 1809px;
+}
 .container {
   margin: 0px 20px;
 }
@@ -92,19 +152,34 @@ export default {
 }
 
 .item_span {
-  position: relative;
+  position: absolute;
   top: 20px;
   left: 25px;
 }
 
 .item_h2 {
-  position: relative;
-  top: 20px;
+  position: absolute;
+  top: 35px;
   left: 25px;
 }
 .chart {
-  height: 400px;
+  float: left;
+  background-color: #f2f2f2;
 }
 
 /* 基本数据end */
+
+/* 文件分布情况 扇形图 start*/
+.file_chart {
+  margin-top: 20px;
+  padding: 10px;
+  height: 420px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.12), 0 0 6px rgba(0, 0, 0, 0.04);
+}
+/* 文件分布情况 扇形图 end*/
+
+.application_config {
+  margin: 20px 0;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.12), 0 0 6px rgba(0, 0, 0, 0.04);
+}
 </style>
