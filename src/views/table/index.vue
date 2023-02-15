@@ -1,5 +1,13 @@
 <template>
   <div class="app-container">
+    <div class="breadcrumb_class">
+      <el-breadcrumb separator="/">
+        <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
+        <el-breadcrumb-item>活动管理</el-breadcrumb-item>
+        <el-breadcrumb-item>活动列表</el-breadcrumb-item>
+        <el-breadcrumb-item>活动详情</el-breadcrumb-item>
+      </el-breadcrumb>
+    </div>
     <el-table
       v-loading="listLoading"
       :data="list"
@@ -52,6 +60,10 @@
     <div ref="contextmenu" v-if="menuVisible" class="menu">
       <div class="contextmenu_item" @click="ShowView(CurrentRow)">查看</div>
       <div class="contextmenu_item" @click="EditData(CurrentRow)">修改</div>
+      <div class="contextmenu_item" @click="ShowView(CurrentRow)">
+        上一级目录
+      </div>
+      <div class="contextmenu_item" @click="ShowView(CurrentRow)">删除</div>
     </div>
   </div>
 </template>
@@ -102,24 +114,19 @@ export default {
       document.removeEventListener("click", this.foo);
     },
     styleMenu(menu, event) {
-      if (event.clientX > 1800) {
-        menu.style.left = event.clientX - 100 + "px";
-      } else {
-        menu.style.left = event.clientX + 1 + "px";
-      }
+      // pageX是整个文档的位置
+      menu.style.left = event.pageX - 30 + "px";
+      menu.style.top = event.pageY - event.offsetY - 10 + "px";
       document.addEventListener("click", this.foo);
-
-      if (event.clientY > 700) {
-        menu.style.top = event.clientY - 30 + "px";
-      } else {
-        menu.style.top = event.clientY - 10 + "px";
-      }
     },
   },
 };
 </script>
 
 <style scoped>
+.breadcrumb_class {
+  margin: 10px;
+}
 .custom-class {
   display: inline-block;
   margin-right: 5px;
@@ -139,7 +146,7 @@ export default {
 .menu {
   position: absolute;
   background-color: #fff;
-  width: 100px; 
+  width: 100px;
   font-size: 12px;
   color: #444040;
   border-radius: 4px;
