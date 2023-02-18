@@ -85,6 +85,7 @@ export default {
       list: null,
       listLoading: true,
       menuVisible: false,
+      dialogVisible: false,
     };
   },
   created() {
@@ -104,6 +105,7 @@ export default {
       this.menuVisible = true; // 显示模态窗口，跳出自定义菜单栏
       event.preventDefault(); //关闭右键默认事件
       this.CurrentRow = row;
+      // 待dom元素渲染后在进行获取dom
       this.$nextTick(() => {
         var menu = this.$refs.contextmenu;
         this.styleMenu(menu, event);
