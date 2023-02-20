@@ -39,11 +39,9 @@
         </el-dropdown-menu>
       </el-dropdown>
     </div>
-    <div>
-      <el-dialog title="提示" :visible.sync="dialogVisible" width="30%">
-        <span>这是一段信息</span>
-      </el-dialog>
-    </div>
+
+    <Modify :dialogVisible.sync="dialogVisible"/>
+   
   </div>
 </template>
 
@@ -51,16 +49,18 @@
 import { mapGetters } from "vuex";
 import Breadcrumb from "@/components/Breadcrumb";
 import Hamburger from "@/components/Hamburger";
+import Modify from "@/layout/components/Modify" ;
 
 export default {
   data() {
     return {
-      dialogVisible: false,
+       dialogVisible: true,
     };
   },
   components: {
     Breadcrumb,
     Hamburger,
+    Modify
   },
   computed: {
     ...mapGetters(["sidebar", "avatar"]),
