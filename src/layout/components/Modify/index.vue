@@ -3,10 +3,16 @@
     <el-dialog title="个人资料" :visible.sync="currentVisible" width="30%">
       <el-form size="small" label-position="right" label-width="80px">
         <el-form-item label="头像">
-          <div class="file_style">
-            <i class="el-icon-plus" style="font-size: 28px; color: #8c939d"></i>
-            <input type="file" id="upload" style="display: none" />
-          </div>
+          <el-upload
+            class="avatar-uploader"
+            action="#"
+            :auto-upload="false"
+            :show-file-list="false"
+            :on-change="handleAvatarSuccess"
+          >
+            <img v-if="imageUrl" :src="imageUrl" class="avatar" />
+            <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+          </el-upload>
         </el-form-item>
         <el-form-item label="登录名">
           <el-input auto-complete="off"></el-input>
@@ -29,6 +35,31 @@
     </el-dialog>
   </div>
 </template>
+<style lang="scss">
+.avatar-uploader .el-upload {
+  border: 1px dashed #d9d9d9;
+  border-radius: 6px;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+.avatar-uploader .el-upload:hover {
+  border-color: #409eff;
+}
+.avatar-uploader-icon {
+  font-size: 28px;
+  color: #8c939d;
+  width: 80px;
+  height: 80px;
+  line-height: 80px;
+  text-align: center;
+}
+.avatar {
+  width: 80px;
+  height: 80px;
+  display: block;
+}
+</style>
 
 <script>
 export default {
@@ -38,6 +69,7 @@ export default {
       dialogImageUrl: "",
       dialogImageVisible: false,
       disabled: false,
+      imageUrl: "",
     };
   },
   computed: {
@@ -51,32 +83,10 @@ export default {
     },
   },
   methods: {
-    handleRemove(file) {
-      console.log(file);
-    },
-    handlerPictureCardPreview(file) {
-      this.dialogImageUrl = file.url;
-      this.dialogImageVisible = true;
-    },
-    handleDownload(file) {
-      console.log(file);
+    handleAvatarSuccess(file, fileList) {
+      this.imageUrl = URL.createObjectURL(file.raw);
     },
   },
 };
 </script>
 
-<style lang="scss" scoped>
-.file_style {
-  display: block;
-  margin: 0 auto;
-  background-color: #fbfdff;
-  border: 1px dashed #c0ccda;
-  border-radius: 6px;
-  box-sizing: border-box;
-  width: 80px;
-  height: 80px;
-  cursor: pointer;
-  line-height: 80px;
-  text-align: center;
-}
-</style>
