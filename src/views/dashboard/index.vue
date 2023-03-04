@@ -1,26 +1,39 @@
 <template>
-  <div class="container w">
-    <div class="userLabel">
-      <h5>欢迎管理员登陆：test, 当前时间为：{{ new Date() }}</h5>
-    </div>
+  <div class="container">
+    <el-row>
+      <div class="userLabel">
+        <h5>欢迎管理员登陆：test, 当前时间为：{{ new Date() }}</h5>
+      </div>
+    </el-row>
+
     <el-card class="datasource">
       <div slot="header">
         <span>数据统计</span>
       </div>
-      <div v-for="o in 5" :key="o" class="item">
-        <span class="item_span">{{ "列表内容 " + o }}</span>
-        <h2 class="item_h2">66</h2>
-      </div>
+      <el-row type="flex" justify="space-between">
+        <el-col v-for="o in 5" :key="o" class="item">
+          <span class="item_span">{{ "列表内容 " + o }}</span>
+          <h2 class="item_h2">66</h2>
+        </el-col>
+      </el-row>
     </el-card>
-    <div class="file_chart">
-      <div ref="chart" class="chart"></div>
-      <div ref="chart2" class="chart"></div>
-      <div ref="chart3" class="chart"></div>
-    </div>
+    <el-row>
+      <div class="file_chart">
+        <el-col :span="8">
+          <div ref="chart" class="chart"></div>
+        </el-col>
+        <el-col :span="8">
+          <div ref="chart2" class="chart"></div>
+        </el-col>
+        <el-col :span="8">
+          <div ref="chart3" class="chart"></div>
+        </el-col>
+      </div>
+    </el-row>
+
     <div class="application_config">
       <el-table :data="tableData" border style="width: 100%">
-        <el-table-column prop="date" label="系统版本">
-        </el-table-column>
+        <el-table-column prop="date" label="系统版本"> </el-table-column>
         <el-table-column prop="address" label="详细数值"> </el-table-column>
       </el-table>
     </div>
@@ -101,20 +114,12 @@ export default {
           },
         ],
       });
-      chartRef.resize({
-        height: 400,
-        width: 596,
-      });
     },
   },
 };
 </script>
 
 <style scoped>
-/* 未使用响应化布局,下版本进行更新,预计2023年3月1号 */
-.w {
-  width: 1809px;
-}
 .container {
   margin: 0px 20px;
 }
@@ -132,6 +137,9 @@ export default {
   background: #f2f2f2;
   margin-left: 10px;
   padding-left: 10px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 /* 用户标签end */
@@ -143,16 +151,18 @@ export default {
 }
 
 .item {
-  float: left;
   position: relative;
   margin: 0 0 15px 20px;
-  width: 333px;
   height: 100px;
   background-color: #f2f2f2;
 }
 
 .item_span {
   position: absolute;
+  width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
   top: 20px;
   left: 25px;
 }
@@ -163,7 +173,7 @@ export default {
   left: 25px;
 }
 .chart {
-  float: left;
+  height: 400px;
   background-color: #f2f2f2;
 }
 
@@ -173,6 +183,7 @@ export default {
 .file_chart {
   margin-top: 20px;
   padding: 10px;
+  min-width: 1331px;
   height: 420px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.12), 0 0 6px rgba(0, 0, 0, 0.04);
 }

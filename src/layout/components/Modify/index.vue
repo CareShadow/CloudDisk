@@ -63,14 +63,17 @@
 
 <script>
 export default {
-  props: ["dialogVisible"],
+  props: ["dialogVisible", "avatarImg"],
   data() {
     return {
       dialogImageUrl: "",
       dialogImageVisible: false,
       disabled: false,
-      imageUrl: "",
+      imageUrl: ''
     };
+  },
+  mounted() {
+    this.imageUrl = this.avatarImg
   },
   computed: {
     currentVisible: {
@@ -85,6 +88,7 @@ export default {
   methods: {
     handleAvatarSuccess(file, fileList) {
       this.imageUrl = URL.createObjectURL(file.raw);
+      console.log(this.imageUrl);
     },
   },
 };

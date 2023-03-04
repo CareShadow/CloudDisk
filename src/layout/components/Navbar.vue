@@ -11,7 +11,11 @@
     <div class="right-menu">
       <el-dropdown class="avatar-container" trigger="click">
         <div class="avatar-wrapper">
-          <img :src="avatar + '?imageView2/1/w/80/h/80'" class="user-avatar" />
+          <img
+            :src="avatar + '?imageView2/1/w/80/h/80'"
+            ref="avatarImg"
+            class="user-avatar"
+          />
           <i class="el-icon-caret-bottom" />
         </div>
         <el-dropdown-menu slot="dropdown" class="user-dropdown">
@@ -40,8 +44,7 @@
       </el-dropdown>
     </div>
 
-    <Modify :dialogVisible.sync="dialogVisible"/>
-   
+    <Modify :dialogVisible.sync="dialogVisible" :avatarImg="avatarImg" />
   </div>
 </template>
 
@@ -49,18 +52,24 @@
 import { mapGetters } from "vuex";
 import Breadcrumb from "@/components/Breadcrumb";
 import Hamburger from "@/components/Hamburger";
-import Modify from "@/layout/components/Modify" ;
+import Modify from "@/layout/components/Modify";
 
 export default {
   data() {
     return {
-       dialogVisible: true,
+      dialogVisible: false,
+      avatarImg: ''
     };
   },
   components: {
     Breadcrumb,
     Hamburger,
-    Modify
+    Modify,
+  },
+  mounted() {
+    this.$nextTick(() => {
+      this.avatarImg = this.$refs.avatarImg.src;
+    });
   },
   computed: {
     ...mapGetters(["sidebar", "avatar"]),
