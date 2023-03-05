@@ -1,13 +1,18 @@
 <template>
   <div class="app-container">
-    <div class="breadcrumb_class">
-      <el-breadcrumb separator="/">
-        <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
-        <el-breadcrumb-item>活动管理</el-breadcrumb-item>
-        <el-breadcrumb-item>活动列表</el-breadcrumb-item>
-        <el-breadcrumb-item>活动详情</el-breadcrumb-item>
-      </el-breadcrumb>
-    </div>
+    <el-row>
+      <el-col :span="12">
+        <el-breadcrumb separator="/">
+          <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
+          <el-breadcrumb-item>活动管理</el-breadcrumb-item>
+          <el-breadcrumb-item>活动列表</el-breadcrumb-item>
+          <el-breadcrumb-item>活动详情</el-breadcrumb-item>
+        </el-breadcrumb>
+      </el-col>
+      <el-col :span="12">
+        <Upload />
+      </el-col>
+    </el-row>
     <el-table
       v-loading="listLoading"
       :data="list"
@@ -19,7 +24,7 @@
     >
       <el-table-column align="center" label="ID" width="100">
         <template slot-scope="scope">
-          <svg-icon icon-class="file" class-name="custom-class"></svg-icon>
+          <svg-icon icon-class="file" class-name="tableicon-class"></svg-icon>
           {{ "name" + scope.row.id.substring(0, 1) }}
         </template>
       </el-table-column>
@@ -69,7 +74,9 @@
 </template>
 <script>
 import { getList } from "@/api/table";
+import Upload from "@/components/Upload";
 export default {
+  components: { Upload },
   filters: {
     statusFilter(status) {
       const statusMap = {
@@ -129,7 +136,8 @@ export default {
 .breadcrumb_class {
   margin: 10px;
 }
-.custom-class {
+
+.tableicon-class {
   display: inline-block;
   margin-right: 5px;
   margin-bottom: 4px;
