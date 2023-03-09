@@ -22,3 +22,12 @@ export function logout() {
     method: 'post'
   })
 }
+
+export function merge(data) {
+  return request({
+    baseURL: '/shadow-api',
+    url: '/slice/merge',
+    method: 'post',
+    params: data
+  })
+}

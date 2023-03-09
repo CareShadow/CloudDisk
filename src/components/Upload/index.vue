@@ -21,22 +21,23 @@
 
 <script>
 import sparkMD5 from "spark-md5";
+import { merge } from "@/api/user"
 export default {
   data() {
     return {
       options: {
-        target: "//localhost:8080/slice/chunk", // 上传路径
+        target: "/shadow-api/slice/chunk", // 上传路径
         chunkSize: "2048000", // 分块大小
         fileParameterName: "file", // 上传参数
         maxChunkRetries: 3, // 重试次数
         testChunks: true, // 服务器分片校验
         // 服务器分片校验函数, 秒传及断点断续基础
         checkChunkUploadedByResponse: function (chunk, message) {
-          let objectMessage = JSON.parse(message);
+          let { data: objectMessage } = JSON.parse(message);
           if (objectMessage.skipUpload) {
             return true;
           }
-          return (objMessage.uploaded || []).indexOf(chunk.offset + 1) >= 0;
+          return (objectMessage.uploaded || []).indexOf(chunk.offset + 1) >= 0;
         },
         // 额外的自定义查询参数
         query: (file, chunk) => {
@@ -62,14 +63,21 @@ export default {
       this.computeMD5(file);
     },
     onFileSuccess(rootFile, file, message, chunk) {
-      // 调用一个合并文件
-      mergeFile(file)
+      // 调用一个合并文件;
+      const data = {
+        identifier: file.uniqueIdentifier,
+        totalChunks: file.chunks.length,
+        contentType: file.fileType,
+        name: file.name
+      };
+      merge(data)
         .then((responseData) => {
           console.log("文件上传", responseData);
         })
         .catch(function (error) {
           console.log("文件上传异常", error);
         });
+      // console.log(file.uniqueIdentifier,file.chunks.length, file.fileType);
     },
     onFileError(rootFile, file, response, chunk) {
       console.log("文件上传失败：" + response);
