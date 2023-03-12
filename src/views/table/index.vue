@@ -1,17 +1,18 @@
 <template>
   <div class="app-container">
     <el-row>
-      <el-col :span="12">
-        <el-breadcrumb separator="/">
-          <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
-          <el-breadcrumb-item>活动管理</el-breadcrumb-item>
-          <el-breadcrumb-item>活动列表</el-breadcrumb-item>
-          <el-breadcrumb-item>活动详情</el-breadcrumb-item>
-        </el-breadcrumb>
-      </el-col>
-      <el-col :span="12">
-        <Upload />
-      </el-col>
+      <div class="userLabel">
+        <div class="breadcrumb">
+          <div class="breadcrumb_item">
+            <el-breadcrumb separator="/">
+              <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
+              <el-breadcrumb-item>活动管理</el-breadcrumb-item>
+              <el-breadcrumb-item>活动列表</el-breadcrumb-item>
+              <el-breadcrumb-item>活动详情</el-breadcrumb-item>
+            </el-breadcrumb>
+          </div>
+        </div>
+      </div>
     </el-row>
     <el-table
       v-loading="listLoading"
@@ -72,11 +73,77 @@
     </div>
   </div>
 </template>
+
+<style scoped>
+.breadcrumb_class {
+  margin: 10px;
+}
+
+.breadcrumb {
+  position: relative;
+  height: 50px;
+  background: #f2f2f2;
+  margin-left: 10px;
+  padding-left: 10px;
+}
+
+.breadcrumb_item {
+  /* 一个绝对定位小技巧 */
+  position: absolute;
+  top: 50%;
+  margin-top: -7px;
+}
+
+.userLabel {
+  height: 50px;
+  line-height: 50px;
+  background: #009688;
+  border-radius: 5px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.12), 0 0 6px rgba(0, 0, 0, 0.04);
+}
+
+.tableicon-class {
+  display: inline-block;
+  margin-right: 5px;
+  margin-bottom: 4px;
+  font-size: 25px;
+  vertical-align: middle;
+}
+
+.contextmenu_item {
+  line-height: 34px;
+  text-align: center;
+}
+
+.contextmenu_item:not(:last-child) {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+.menu {
+  position: absolute;
+  background-color: #fff;
+  width: 100px;
+  font-size: 12px;
+  color: #444040;
+  border-radius: 4px;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  border-radius: 3px;
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
+  white-space: nowrap;
+  z-index: 1000;
+}
+.contextmenu_item:hover {
+  cursor: pointer;
+  background: #66b1ff;
+  border-color: #66b1ff;
+  color: #fff;
+}
+</style>
+
 <script>
 import { getList } from "@/api/table";
-import Upload from "@/components/Upload";
 export default {
-  components: { Upload },
   filters: {
     statusFilter(status) {
       const statusMap = {
@@ -132,46 +199,3 @@ export default {
 };
 </script>
 
-<style scoped>
-.breadcrumb_class {
-  margin: 10px;
-}
-
-.tableicon-class {
-  display: inline-block;
-  margin-right: 5px;
-  margin-bottom: 4px;
-  font-size: 25px;
-  vertical-align: middle;
-}
-
-.contextmenu_item {
-  line-height: 34px;
-  text-align: center;
-}
-
-.contextmenu_item:not(:last-child) {
-  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-}
-.menu {
-  position: absolute;
-  background-color: #fff;
-  width: 100px;
-  font-size: 12px;
-  color: #444040;
-  border-radius: 4px;
-  -webkit-box-sizing: border-box;
-  box-sizing: border-box;
-  border-radius: 3px;
-  border: 1px solid rgba(0, 0, 0, 0.15);
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
-  white-space: nowrap;
-  z-index: 1000;
-}
-.contextmenu_item:hover {
-  cursor: pointer;
-  background: #66b1ff;
-  border-color: #66b1ff;
-  color: #fff;
-}
-</style>

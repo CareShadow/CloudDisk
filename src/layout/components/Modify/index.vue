@@ -29,10 +29,6 @@
         </el-form-item>
       </el-form>
     </el-dialog>
-
-    <el-dialog width="30%" :visible.sync="dialogImageVisible">
-      <img width="100%" :src="dialogImageUrl" alt="" />
-    </el-dialog>
   </div>
 </template>
 <style lang="scss">
@@ -66,14 +62,8 @@ export default {
   props: ["dialogVisible", "avatarImg"],
   data() {
     return {
-      dialogImageUrl: "",
-      dialogImageVisible: false,
       disabled: false,
-      imageUrl: ''
     };
-  },
-  mounted() {
-    this.imageUrl = this.avatarImg
   },
   computed: {
     currentVisible: {
@@ -84,11 +74,18 @@ export default {
         this.$emit("update:dialogVisible", newVal);
       },
     },
+    imageUrl: {
+      get() {
+        return this.avatarImg;
+      },
+      set(newVal) {
+        this.$emit("update:avatarImg", newVal);
+      }
+    },
   },
   methods: {
     handleAvatarSuccess(file, fileList) {
       this.imageUrl = URL.createObjectURL(file.raw);
-      console.log(this.imageUrl);
     },
   },
 };

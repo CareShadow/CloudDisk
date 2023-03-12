@@ -77,7 +77,6 @@ export default {
         .catch(function (error) {
           console.log("文件上传异常", error);
         });
-      // console.log(file.uniqueIdentifier,file.chunks.length, file.fileType);
     },
     onFileError(rootFile, file, response, chunk) {
       console.log("文件上传失败：" + response);
@@ -138,7 +137,7 @@ export default {
 .uploader-example {
   width: 880px;
   padding: 15px;
-  margin: 40px auto 0;
+  margin: 10px auto 0;
   font-size: 12px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
 }

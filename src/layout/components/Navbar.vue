@@ -44,7 +44,7 @@
       </el-dropdown>
     </div>
 
-    <Modify :dialogVisible.sync="dialogVisible" :avatarImg="avatarImg" />
+    <Modify :dialogVisible.sync="dialogVisible" :avatarImg.sync="avatarImg" />
   </div>
 </template>
 
