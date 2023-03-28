@@ -51,7 +51,7 @@ export const constantRoutes = [
       path: 'dashboard',
       name: 'Dashboard',
       component: () => import('@/views/dashboard/index'),
-      meta: { title: 'Dashboard', icon: 'file' }
+      meta: { title: '系统主页', icon: 'file' }
     }]
   },
 
@@ -60,13 +60,13 @@ export const constantRoutes = [
     component: Layout,
     redirect: '/example/table',
     name: 'Example',
-    meta: { title: 'Example', icon: 'el-icon-s-help' },
+    meta: { title: '实例页面', icon: 'el-icon-s-help' },
     children: [
       {
         path: 'table',
         name: 'Table',
         component: () => import('@/views/table/index'),
-        meta: { title: 'Table', icon: 'table' }
+        meta: { title: '文件目录', icon: 'table' }
       },
     ]
   },
@@ -78,7 +78,7 @@ export const constantRoutes = [
         path: 'upload',
         name: 'Upload',
         component: () => import('@/views/upload/index'),
-        meta: { title: 'Upload', icon: 'el-icon-platform-eleme' }
+        meta: { title: '文件上传', icon: 'el-icon-platform-eleme' }
       }
     ]
   },

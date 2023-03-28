@@ -6,9 +6,9 @@
           <div class="breadcrumb_item">
             <el-breadcrumb separator="/">
               <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
-              <el-breadcrumb-item>活动管理</el-breadcrumb-item>
-              <el-breadcrumb-item>活动列表</el-breadcrumb-item>
-              <el-breadcrumb-item>活动详情</el-breadcrumb-item>
+              <el-breadcrumb-item>index</el-breadcrumb-item>
+              <el-breadcrumb-item>images</el-breadcrumb-item>
+              <el-breadcrumb-item>lists</el-breadcrumb-item>
             </el-breadcrumb>
           </div>
         </div>
@@ -26,7 +26,6 @@
       <el-table-column align="center" label="ID" width="100">
         <template slot-scope="scope">
           <svg-icon icon-class="file" class-name="tableicon-class"></svg-icon>
-          {{ "name" + scope.row.id.substring(0, 1) }}
         </template>
       </el-table-column>
       <el-table-column label="名称">
