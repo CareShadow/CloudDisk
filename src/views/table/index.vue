@@ -15,39 +15,37 @@
       </div>
     </el-row>
     <el-table
+      stripe
       v-loading="listLoading"
       :data="list"
       element-loading-text="Loading"
       :border="false"
       fit
       highlight-current-row
-      @row-contextmenu="rightClick"
+      @row-contextmenu=""
     >
-      <el-table-column align="center" label="ID" width="100">
-        <template slot-scope="scope">
-          <svg-icon icon-class="file" class-name="tableicon-class"></svg-icon>
-        </template>
-      </el-table-column>
       <el-table-column label="名称">
         <template slot-scope="scope">
-          {{ scope.row.title }}
+          <svg-icon
+            :icon-class="scope.row.type == null ? 'folder' : 'file'"
+            class-name="tableicon-class"
+          ></svg-icon>
+          {{ scope.row.name }}
         </template>
       </el-table-column>
       <el-table-column label="扩展名" width="110" align="center">
         <template slot-scope="scope">
-          <span>{{ scope.row.author }}</span>
+          <span>{{ scope.row.postfix }}</span>
         </template>
       </el-table-column>
       <el-table-column label="大小" width="110" align="center">
         <template slot-scope="scope">
-          {{ scope.row.pageviews }}
+          {{ scope.row.size }}
         </template>
       </el-table-column>
       <el-table-column label="下载次数" width="110" align="center">
         <template slot-scope="scope">
-          <el-tag :type="scope.row.status | statusFilter">{{
-            scope.row.status
-          }}</el-tag>
+          {{ scope.row.downloadTime }}
         </template>
       </el-table-column>
       <el-table-column
@@ -58,7 +56,7 @@
       >
         <template slot-scope="scope">
           <i class="el-icon-time" />
-          <span>{{ scope.row.display_time }}</span>
+          <span style="margin-left: 10px">{{ scope.row.uploadTime }}</span>
         </template>
       </el-table-column>
     </el-table>
@@ -141,18 +139,8 @@
 </style>
 
 <script>
-import { getList } from "@/api/table";
+import { getFileOrFolder } from "@/api/user";
 export default {
-  filters: {
-    statusFilter(status) {
-      const statusMap = {
-        published: "success",
-        draft: "gray",
-        deleted: "danger",
-      };
-      return statusMap[status];
-    },
-  },
   data() {
     return {
       list: null,
@@ -167,8 +155,8 @@ export default {
   methods: {
     fetchData() {
       this.listLoading = true;
-      getList().then((response) => {
-        this.list = response.data.items;
+      getFileOrFolder(0).then((resp) => {
+        this.list = resp.data;
         this.listLoading = false;
       });
     },
