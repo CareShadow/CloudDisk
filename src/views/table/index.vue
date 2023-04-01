@@ -22,12 +22,11 @@
       :border="false"
       fit
       highlight-current-row
-      @row-contextmenu=""
     >
       <el-table-column label="名称">
         <template slot-scope="scope">
           <svg-icon
-            :icon-class="scope.row.type == null ? 'folder' : 'file'"
+            :icon-class="scope.row.type == null ? 'folder' : 'word'"
             class-name="tableicon-class"
           ></svg-icon>
           {{ scope.row.name }}
@@ -49,7 +48,7 @@
         </template>
       </el-table-column>
       <el-table-column
-        align="center"
+        align="left"
         prop="created_at"
         label="上传时间"
         width="200"
@@ -60,13 +59,48 @@
         </template>
       </el-table-column>
     </el-table>
-    <div ref="contextmenu" v-if="menuVisible" class="menu">
+    <!-- <div ref="contextmenu" v-if="menuVisible" class="menu">
       <div class="contextmenu_item" @click="ShowView(CurrentRow)">查看</div>
       <div class="contextmenu_item" @click="EditData(CurrentRow)">修改</div>
       <div class="contextmenu_item" @click="ShowView(CurrentRow)">
         上一级目录
       </div>
       <div class="contextmenu_item" @click="ShowView(CurrentRow)">删除</div>
+    </div> -->
+    <div class="el-dropdown-link">
+      <el-dropdown placement="top" trigger="click">
+        <span>
+          <button class="feba-toggle" ref="rotateDiv" @click="rotateDiv" type="button">
+            <span><i class="el-icon-plus" style="font-weight: 800"></i></span>
+          </button>
+        </span>
+        <el-dropdown-menu slot="dropdown">
+          <el-dropdown-item>
+            <el-tooltip placement="left" content="创建文件夹">
+              <button class="feba-toggle_item" type="button">
+                <span
+                  ><i
+                    class="el-icon-folder-add"
+                    style="font-weight: 800; color: #fff"
+                  ></i
+                ></span>
+              </button>
+            </el-tooltip>
+          </el-dropdown-item>
+          <el-dropdown-item>
+            <el-tooltip placement="left" content="上传文件">
+              <button class="feba-toggle_item" type="button">
+                <span
+                  ><i
+                    class="el-icon-upload2"
+                    style="font-weight: 800; color: #fff"
+                  ></i
+                ></span>
+              </button>
+            </el-tooltip>
+          </el-dropdown-item>
+        </el-dropdown-menu>
+      </el-dropdown>
     </div>
   </div>
 </template>
@@ -115,6 +149,7 @@
 .contextmenu_item:not(:last-child) {
   border-bottom: 1px solid rgba(0, 0, 0, 0.1);
 }
+
 .menu {
   position: absolute;
   background-color: #fff;
@@ -130,11 +165,70 @@
   white-space: nowrap;
   z-index: 1000;
 }
+
 .contextmenu_item:hover {
   cursor: pointer;
   background: #66b1ff;
   border-color: #66b1ff;
   color: #fff;
+}
+
+.feba-toggle {
+  width: 55px;
+  height: 55px;
+  line-height: 55px;
+  background-color: #ff726f;
+  border-radius: 50%;
+  box-shadow: 0 2px 3px rgba(0, 0, 0, 0.15);
+  text-align: center;
+  border: 0;
+  transform: rotate(0deg);
+  padding: 0;
+  transition: transform 0.3s ease-in-out;
+}
+
+.feba-toggle span {
+  display: inline-block;
+  color: #fff;
+}
+
+.el-icon-arrow-down {
+  font-size: 12px;
+}
+
+.el-dropdown-link {
+  position: fixed;
+  bottom: 50px;
+  right: 30px;
+}
+
+.el-dropdown-menu {
+  padding: 10px 0;
+  margin: 5px 0;
+  box-shadow: 0 0 0 0;
+  border: 0px;
+}
+
+.el-dropdown-menu__item:not(.is-disabled):hover {
+  background-color: #fff;
+  color: #fff;
+}
+
+.feba-toggle_item {
+  width: 40px;
+  height: 40px;
+  margin-top: 10px;
+  line-height: 40px;
+  background-color: #ffc107;
+  border-radius: 50%;
+  box-shadow: 0 2px 3px rgba(0, 0, 0, 0.15);
+  text-align: center;
+  border: 0;
+  padding: 0;
+}
+
+.el-dropdown-menu__item i {
+  margin-right: 0px;
 }
 </style>
 
@@ -160,27 +254,20 @@ export default {
         this.listLoading = false;
       });
     },
-    rightClick(row, column, event) {
-      this.testModeCode = row.testModeCode;
-      this.menuVisible = false; // 先把模态框关死，目的是 第二次或者第n次右键鼠标的时候 它默认的是true
-      this.menuVisible = true; // 显示模态窗口，跳出自定义菜单栏
-      event.preventDefault(); //关闭右键默认事件
-      this.CurrentRow = row;
-      // 待dom元素渲染后在进行获取dom
-      this.$nextTick(() => {
-        var menu = this.$refs.contextmenu;
-        this.styleMenu(menu, event);
-      });
-    },
-    foo() {
-      this.menuVisible = false;
-      document.removeEventListener("click", this.foo);
-    },
-    styleMenu(menu, event) {
-      // pageX是整个文档的位置
-      menu.style.left = event.pageX - 30 + "px";
-      menu.style.top = event.pageY - event.offsetY - 10 + "px";
-      document.addEventListener("click", this.foo);
+    rotateDiv() {
+      // 获取 div 节点
+      const divNode = this.$refs.rotateDiv;
+
+      // 判断 div 是否已经旋转
+      if (divNode.style.transform == "rotate(45deg)") {
+        // 如果已经旋转，则返回原来的状态
+        divNode.style.transform = "rotate(0deg)"
+        divNode.style.backgroundColor = '#ff726f';
+      } else {
+        // 如果没有旋转，则旋转 90 度
+       divNode.style.transform = "rotate(45deg)"
+       divNode.style.backgroundColor = '#ff524f';
+      }
     },
   },
 };
