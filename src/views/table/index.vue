@@ -58,19 +58,14 @@
           <span style="margin-left: 10px">{{ scope.row.uploadTime }}</span>
         </template>
       </el-table-column>
+      <el-table-column label="操作" width="200" align="right">
+            <DropDown />
+      </el-table-column>
     </el-table>
-    <!-- <div ref="contextmenu" v-if="menuVisible" class="menu">
-      <div class="contextmenu_item" @click="ShowView(CurrentRow)">查看</div>
-      <div class="contextmenu_item" @click="EditData(CurrentRow)">修改</div>
-      <div class="contextmenu_item" @click="ShowView(CurrentRow)">
-        上一级目录
-      </div>
-      <div class="contextmenu_item" @click="ShowView(CurrentRow)">删除</div>
-    </div> -->
     <div class="el-dropdown-link">
-      <el-dropdown placement="top" trigger="click">
+      <el-dropdown placement="top" trigger="click" @visible-change="rotateDiv">
         <span>
-          <button class="feba-toggle" ref="rotateDiv" @click="rotateDiv" type="button">
+          <button class="feba-toggle" ref="rotateDiv" type="button">
             <span><i class="el-icon-plus" style="font-weight: 800"></i></span>
           </button>
         </span>
@@ -102,6 +97,7 @@
         </el-dropdown-menu>
       </el-dropdown>
     </div>
+    <DropDown />
   </div>
 </template>
 
@@ -198,6 +194,7 @@
 
 .el-dropdown-link {
   position: fixed;
+  z-index: 1000;
   bottom: 50px;
   right: 30px;
 }
@@ -207,10 +204,11 @@
   margin: 5px 0;
   box-shadow: 0 0 0 0;
   border: 0px;
+  background-color: transparent;
 }
 
 .el-dropdown-menu__item:not(.is-disabled):hover {
-  background-color: #fff;
+  background-color: transparent;
   color: #fff;
 }
 
@@ -234,7 +232,9 @@
 
 <script>
 import { getFileOrFolder } from "@/api/user";
+import DropDown from "@/components/DropDown/index.vue";
 export default {
+  components: { DropDown },
   data() {
     return {
       list: null,
@@ -261,14 +261,15 @@ export default {
       // 判断 div 是否已经旋转
       if (divNode.style.transform == "rotate(45deg)") {
         // 如果已经旋转，则返回原来的状态
-        divNode.style.transform = "rotate(0deg)"
-        divNode.style.backgroundColor = '#ff726f';
+        divNode.style.transform = "rotate(0deg)";
+        divNode.style.backgroundColor = "#ff726f";
       } else {
         // 如果没有旋转，则旋转 90 度
-       divNode.style.transform = "rotate(45deg)"
-       divNode.style.backgroundColor = '#ff524f';
+        divNode.style.transform = "rotate(45deg)";
+        divNode.style.backgroundColor = "#ff524f";
       }
     },
+   
   },
 };
 </script>
