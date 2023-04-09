@@ -71,18 +71,6 @@ export const constantRoutes = [
     ]
   },
   {
-    path: '/upload',
-    component: Layout,
-    children: [
-      {
-        path: 'upload',
-        name: 'Upload',
-        component: () => import('@/views/upload/index'),
-        meta: { title: '文件上传', icon: 'el-icon-platform-eleme' }
-      }
-    ]
-  },
-  {
     path: 'external-link',
     component: Layout,
     children: [

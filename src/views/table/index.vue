@@ -5,30 +5,19 @@
         <div class="breadcrumb">
           <div class="breadcrumb_item">
             <el-breadcrumb separator="/">
-              <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
-              <el-breadcrumb-item>index</el-breadcrumb-item>
-              <el-breadcrumb-item>images</el-breadcrumb-item>
-              <el-breadcrumb-item>lists</el-breadcrumb-item>
+              <el-breadcrumb-item v-for="item in content" :key="item.folderId">
+                <a @click="enterFolder(item.folderId)">{{ item.folderName }}</a>
+              </el-breadcrumb-item>
             </el-breadcrumb>
           </div>
         </div>
       </div>
     </el-row>
-    <el-table
-      stripe
-      v-loading="listLoading"
-      :data="list"
-      element-loading-text="Loading"
-      :border="false"
-      fit
-      highlight-current-row
-    >
+    <el-table stripe v-loading="listLoading" :data="list" element-loading-text="Loading" :border="false" fit
+      highlight-current-row>
       <el-table-column label="名称">
         <template slot-scope="scope">
-          <svg-icon
-            :icon-class="scope.row.type == null ? 'folder' : 'word'"
-            class-name="tableicon-class"
-          ></svg-icon>
+          <svg-icon :icon-class="scope.row.type == null ? 'folder' : 'word'" class-name="tableicon-class"></svg-icon>
           {{ scope.row.name }}
         </template>
       </el-table-column>
@@ -47,23 +36,25 @@
           {{ scope.row.downloadTime }}
         </template>
       </el-table-column>
-      <el-table-column
-        align="left"
-        prop="created_at"
-        label="上传时间"
-        width="200"
-      >
+      <el-table-column align="left" prop="created_at" label="上传时间" width="200">
         <template slot-scope="scope">
           <i class="el-icon-time" />
           <span style="margin-left: 10px">{{ scope.row.uploadTime }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="操作" width="200" align="right">
-            <DropDown />
+      <el-table-column label="操作" width="350" align="center">
+        <template slot-scope="scope">
+          <el-button size="small" type="primary" icon="el-icon-s-home" circle
+            @click="enterFolder(scope.row.id)"></el-button>
+          <el-button size="small" type="success" icon="el-icon-download" circle></el-button>
+          <el-button size="small" type="warning" icon="el-icon-edit" circle></el-button>
+          <el-button size="small" type="danger" icon="el-icon-delete" circle
+          @click="deleteFile(scope.row.id)"></el-button>
+        </template>
       </el-table-column>
     </el-table>
     <div class="el-dropdown-link">
-      <el-dropdown placement="top" trigger="click" @visible-change="rotateDiv">
+      <el-dropdown placement="top" trigger="click" @visible-change="rotateDiv" :hide-on-click="false">
         <span>
           <button class="feba-toggle" ref="rotateDiv" type="button">
             <span><i class="el-icon-plus" style="font-weight: 800"></i></span>
@@ -72,36 +63,152 @@
         <el-dropdown-menu slot="dropdown">
           <el-dropdown-item>
             <el-tooltip placement="left" content="创建文件夹">
-              <button class="feba-toggle_item" type="button">
-                <span
-                  ><i
-                    class="el-icon-folder-add"
-                    style="font-weight: 800; color: #fff"
-                  ></i
-                ></span>
+              <button class="feba-toggle_item" type="button" @click="showInput">
+                <span>
+                  <i class="el-icon-folder-add" style="font-weight: 800; color: #fff"></i>
+                </span>
               </button>
             </el-tooltip>
           </el-dropdown-item>
           <el-dropdown-item>
             <el-tooltip placement="left" content="上传文件">
-              <button class="feba-toggle_item" type="button">
-                <span
-                  ><i
-                    class="el-icon-upload2"
-                    style="font-weight: 800; color: #fff"
-                  ></i
-                ></span>
+              <button class="feba-toggle_item" type="button" @click="dialogVisible = true">
+                <span>
+                  <i class="el-icon-upload2" style="font-weight: 800; color: #fff"></i>
+                </span>
               </button>
             </el-tooltip>
           </el-dropdown-item>
         </el-dropdown-menu>
       </el-dropdown>
     </div>
-    <DropDown />
+
+    <el-dialog title="上传文件" :visible.sync="dialogVisible">
+      <Upload></Upload>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="dialogVisible = false">取 消</el-button>
+        <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
+      </span>
+    </el-dialog>
+
+    <div class="overlay" v-show="inputVisible">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <button class="close">
+            <span @click="inputVisible = false">x</span>
+          </button>
+          <div class="modal-body">
+            <form>
+              <div class="input-group">
+                <input type="text" class="ig-text" placeholder="文件夹名字" value ref="CreateFolder"
+                  @keyup.enter="createFolder" />
+                <span class="border"></span>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- 遮罩层 -->
   </div>
 </template>
-
+ 
 <style scoped>
+.input-group .border {
+  position: absolute;
+  height: 2px;
+  bottom: 0px;
+  right: 50%;
+  left: 50%;
+  background-color: #03a9f4;
+  transition: right 0.4s ease-in, left 0.4s ease-in-out;
+}
+
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.1);
+  z-index: 3000;
+}
+
+.input-group input:focus+.border {
+  left: 0;
+  right: 0;
+}
+
+.input-group input {
+  outline: none;
+}
+
+.input-group {
+  position: relative;
+}
+
+.modal-body {
+  position: relative;
+  padding: 30px 35px;
+}
+
+.close span {
+  width: 25px;
+  height: 25px;
+  display: block;
+  border-radius: 50%;
+  line-height: 24px;
+  text-shadow: none;
+}
+
+.close {
+  right: 15px;
+  font-weight: normal;
+  opacity: 1;
+  font-size: 18px;
+  position: absolute;
+  text-align: center;
+  top: 16px;
+  z-index: 1;
+  border-radius: 50%;
+  padding: 0;
+  background-color: #e8e8e8;
+  color: #7b7b7b;
+  border: 0;
+}
+
+.modal-content {
+  border-radius: 3px;
+  box-shadow: none;
+  position: relative;
+  background-color: #fff;
+  background-clip: padding-box;
+  border: 1px solid transparent;
+  outline: 0;
+}
+
+.modal-dialog {
+  position: fixed;
+  right: 25px;
+  bottom: 110px;
+  width: 400px;
+  margin: 0;
+  height: 110px;
+  opacity: 1;
+}
+
+.ig-text {
+  width: 100%;
+  height: 40px;
+  border: 0;
+  background-color: transparent;
+  text-align: center;
+  border-bottom: 1px solid #eee;
+  color: #32393f;
+  box-shadow: none;
+  font-size: 13px;
+}
+
 .breadcrumb_class {
   margin: 10px;
 }
@@ -188,10 +295,6 @@
   color: #fff;
 }
 
-.el-icon-arrow-down {
-  font-size: 12px;
-}
-
 .el-dropdown-link {
   position: fixed;
   z-index: 1000;
@@ -200,8 +303,6 @@
 }
 
 .el-dropdown-menu {
-  padding: 10px 0;
-  margin: 5px 0;
   box-shadow: 0 0 0 0;
   border: 0px;
   background-color: transparent;
@@ -231,16 +332,28 @@
 </style>
 
 <script>
-import { getFileOrFolder } from "@/api/user";
-import DropDown from "@/components/DropDown/index.vue";
+import { getFileOrFolder, createNewFolder, deleteFile, deleteFolder, filePreview, downloadFile } from "@/api/user";
+import Upload from "@/components/Upload";
 export default {
-  components: { DropDown },
+  components: { Upload },
   data() {
     return {
-      list: null,
+      list: [
+        {
+          id: 1,
+          name: "images",
+          postfix: null,
+          size: null,
+          downloadTime: null,
+          type: null,
+          uploadTime: "Jun 2, 2008 10:40 PM",
+        },
+      ],
+      folderId: 0,
       listLoading: true,
-      menuVisible: false,
+      inputVisible: false,
       dialogVisible: false,
+      content: [],
     };
   },
   created() {
@@ -249,27 +362,80 @@ export default {
   methods: {
     fetchData() {
       this.listLoading = true;
-      getFileOrFolder(0).then((resp) => {
-        this.list = resp.data;
+      getFileOrFolder(this.folderId).then((resp) => {
+        this.list = resp.data.folderList;
+        this.content = resp.data.content;
         this.listLoading = false;
       });
     },
+
     rotateDiv() {
       // 获取 div 节点
       const divNode = this.$refs.rotateDiv;
-
       // 判断 div 是否已经旋转
-      if (divNode.style.transform == "rotate(45deg)") {
+      if (divNode.style.transform == "rotate(135deg)") {
         // 如果已经旋转，则返回原来的状态
         divNode.style.transform = "rotate(0deg)";
         divNode.style.backgroundColor = "#ff726f";
       } else {
         // 如果没有旋转，则旋转 90 度
-        divNode.style.transform = "rotate(45deg)";
+        divNode.style.transform = "rotate(135deg)";
         divNode.style.backgroundColor = "#ff524f";
       }
     },
-   
+    // 显示input节点,并将焦点锁定
+    showInput() {
+      this.inputVisible = !this.inputVisible;
+      this.$nextTick(() => {
+        this.$refs.CreateFolder.focus();
+      });
+    },
+    // 监听回车事件,发送请求
+    createFolder() {
+      const input_node = this.$refs.CreateFolder;
+      this.listLoading = true;
+      createNewFolder({
+        parentFolderId: this.folderId,
+        folderName: input_node.value,
+      }).then((resp) => {
+        getFileOrFolder(this.folderId).then((resp) => {
+          this.list = resp.data;
+          this.listLoading = false;
+        });
+      });
+      this.inputVisible = false;
+      input_node.value = "";
+    },
+
+    enterFolder(folderId) {
+      this.listLoading = true;
+      this.folderId = folderId;
+      getFileOrFolder(this.folderId).then((resp) => {
+        this.list = resp.data.folderList;
+        this.content = resp.data.content;
+        this.listLoading = false;
+      });
+    },
+
+    deleteFile(fileId) {
+      deleteFile(fileId).then((resp) => {
+        this.$message({
+          message: resp.message,
+          type: 'success'
+        })
+        this.flushFile();
+      })
+    },
+    
+    // 刷新文件操作
+    flushFile() {
+      this.listLoading = true;
+      getFileOrFolder(this.folderId).then((resp) => {
+        this.list = resp.data.folderList;
+        this.content = resp.data.content;
+        this.listLoading = false;
+      });
+    }
   },
 };
 </script>
