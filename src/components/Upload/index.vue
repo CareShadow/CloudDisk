@@ -1,13 +1,6 @@
 <template>
-  <uploader
-    class="uploader-example"
-    :options="options"
-    :autoStart="false"
-    :file-status-text="fileStatusText"
-    @file-added="onFileAdded"
-    @file-success="onFileSuccess"
-    @file-error="onFileError"
-  >
+  <uploader class="uploader-example" :options="options" :autoStart="false" :file-status-text="fileStatusText"
+    @file-added="onFileAdded" @file-success="onFileSuccess" @file-error="onFileError">
     <uploader-unsupport></uploader-unsupport>
     <uploader-drop>
       <p>Drop files here to upload or</p>
@@ -23,6 +16,7 @@
 import sparkMD5 from "spark-md5";
 import { merge } from "@/api/user"
 export default {
+  props: ['folderId'],
   data() {
     return {
       options: {
@@ -63,12 +57,15 @@ export default {
       this.computeMD5(file);
     },
     onFileSuccess(rootFile, file, message, chunk) {
+      console.log(file);
       // 调用一个合并文件;
       const data = {
         identifier: file.uniqueIdentifier,
         totalChunks: file.chunks.length,
         contentType: file.fileType,
-        name: file.name
+        size: file.size / 1024,
+        name: file.name,
+        folderId: this.folderId
       };
       merge(data)
         .then((responseData) => {
@@ -102,10 +99,10 @@ export default {
         } else {
           let md5 = spark.end();
           file.uniqueIdentifier = md5;
+          file.params = { folderId: this.folderId }
           file.resume();
           console.log(
-            `MD5计算完毕：${file.name} \nMD5：${md5} \n分片：${chunks} 大小:${
-              file.size
+            `MD5计算完毕：${file.name} \nMD5：${md5} \n分片：${chunks} 大小:${file.size
             } 用时：${new Date().getTime() - time} ms`
           );
         }
@@ -141,9 +138,11 @@ export default {
   font-size: 12px;
   /* box-shadow: 0 0 10px rgba(0, 0, 0, 0.4); */
 }
+
 .uploader-example .uploader-btn {
   margin-right: 4px;
 }
+
 .uploader-example .uploader-list {
   max-height: 440px;
   overflow: auto;

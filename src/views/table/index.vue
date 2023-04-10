@@ -84,7 +84,7 @@
     </div>
 
     <el-dialog title="上传文件" :visible.sync="dialogVisible">
-      <Upload></Upload>
+      <Upload :folderId="folderId"></Upload>
       <span slot="footer" class="dialog-footer">
         <el-button @click="dialogVisible = false">取 消</el-button>
         <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
@@ -399,7 +399,8 @@ export default {
         folderName: input_node.value,
       }).then((resp) => {
         getFileOrFolder(this.folderId).then((resp) => {
-          this.list = resp.data;
+          this.list = resp.data.folderList;
+        this.content = resp.data.content;
           this.listLoading = false;
         });
       });
