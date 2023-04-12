@@ -46,10 +46,11 @@
         <template slot-scope="scope">
           <el-button size="small" type="primary" icon="el-icon-s-home" circle
             @click="enterFolder(scope.row.id)"></el-button>
-          <el-button size="small" type="success" icon="el-icon-download" circle></el-button>
+          <el-button size="small" type="success" icon="el-icon-download" circle
+            @click="downloadFile(scope.row.id)"></el-button>
           <el-button size="small" type="warning" icon="el-icon-edit" circle></el-button>
           <el-button size="small" type="danger" icon="el-icon-delete" circle
-          @click="deleteFile(scope.row.id)"></el-button>
+            @click="deleteFile(scope.row.id)"></el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -332,7 +333,7 @@
 </style>
 
 <script>
-import { getFileOrFolder, createNewFolder, deleteFile, deleteFolder, filePreview, downloadFile } from "@/api/user";
+import { getFileOrFolder, createNewFolder, deleteFile, deleteFolder, filePreview } from "@/api/user";
 import Upload from "@/components/Upload";
 export default {
   components: { Upload },
@@ -400,7 +401,7 @@ export default {
       }).then((resp) => {
         getFileOrFolder(this.folderId).then((resp) => {
           this.list = resp.data.folderList;
-        this.content = resp.data.content;
+          this.content = resp.data.content;
           this.listLoading = false;
         });
       });
@@ -427,7 +428,15 @@ export default {
         this.flushFile();
       })
     },
-    
+
+    downloadFile(fileId) {
+      const link = document.createElement('a') // 创建a标签
+      link.href = `http://localhost:9528/shadow-api/management/file/download?fileId=${fileId}` // 设置a标签的href属性
+      document.body.appendChild(link) // 将a标签添加到页面中
+      link.click() // 模拟a标签的点击事件
+      document.body.removeChild(link) // 移除a标签
+    },
+
     // 刷新文件操作
     flushFile() {
       this.listLoading = true;

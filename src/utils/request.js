@@ -44,9 +44,7 @@ service.interceptors.response.use(
    */
   response => {
     const res = response.data
-    // 待完善响应规则
     res.code = res.code ? res.code : res.resultCode;
-
     // if the custom code is not 200, it is judged as an error.
     if (res.code !== 200) {
       Message({
