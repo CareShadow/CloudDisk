@@ -68,8 +68,15 @@ export const constantRoutes = [
         component: () => import('@/views/table/index'),
         meta: { title: '文件目录', icon: 'table' }
       },
+      {
+        path: 'preview',
+        name: 'preview',
+        component: () => import("@/views/preview/index"),
+        meta: { title: '文件预览', icon: 'link' }
+      }
     ]
   },
+
   {
     path: 'external-link',
     component: Layout,
@@ -77,9 +84,11 @@ export const constantRoutes = [
       {
         path: 'https://panjiachen.github.io/vue-element-admin-site/#/',
         meta: { title: 'External Link', icon: 'link' }
-      }
+      },
+      
     ]
   },
+  
 
   // 404 page must be placed at the end !!!
   { path: '*', redirect: '/404', hidden: true }

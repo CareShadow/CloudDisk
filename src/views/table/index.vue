@@ -13,11 +13,21 @@
         </div>
       </div>
     </el-row>
-    <el-table stripe v-loading="listLoading" :data="list" element-loading-text="Loading" :border="false" fit
-      highlight-current-row>
+    <el-table
+      stripe
+      v-loading="listLoading"
+      :data="list"
+      element-loading-text="Loading"
+      :border="false"
+      fit
+      highlight-current-row
+    >
       <el-table-column label="名称">
         <template slot-scope="scope">
-          <svg-icon :icon-class="scope.row.type == null ? 'folder' : 'word'" class-name="tableicon-class"></svg-icon>
+          <svg-icon
+            :icon-class="scope.row.type == null ? 'folder' : 'word'"
+            class-name="tableicon-class"
+          ></svg-icon>
           {{ scope.row.name }}
         </template>
       </el-table-column>
@@ -36,7 +46,12 @@
           {{ scope.row.downloadTime }}
         </template>
       </el-table-column>
-      <el-table-column align="left" prop="created_at" label="上传时间" width="200">
+      <el-table-column
+        align="left"
+        prop="created_at"
+        label="上传时间"
+        width="200"
+      >
         <template slot-scope="scope">
           <i class="el-icon-time" />
           <span style="margin-left: 10px">{{ scope.row.uploadTime }}</span>
@@ -44,18 +59,58 @@
       </el-table-column>
       <el-table-column label="操作" width="350" align="center">
         <template slot-scope="scope">
-          <el-button size="small" type="primary" icon="el-icon-s-home" circle
-            @click="enterFolder(scope.row.id)"></el-button>
-          <el-button size="small" type="success" icon="el-icon-download" circle
-            @click="downloadFile(scope.row.id)"></el-button>
-          <el-button size="small" type="warning" icon="el-icon-edit" circle></el-button>
-          <el-button size="small" type="danger" icon="el-icon-delete" circle
-            @click="deleteFile(scope.row.id)"></el-button>
+          <!-- 进入文件夹 -->
+          <el-button
+            v-show="scope.row.type == null"
+            size="small"
+            type="primary"
+            icon="el-icon-s-home"
+            circle
+            @click="enterFolder(scope.row.id)"
+          ></el-button>
+          <!-- 预览文件 -->
+          <el-button
+            v-show="!(scope.row.type == null)"
+            size="small"
+            type="primary"
+            icon="el-icon-picture"
+            @click="filePreview(scope.row.id)"
+            circle
+          ></el-button>
+          <!-- 下载文件 -->
+          <el-button
+            v-show="!(scope.row.type == null)"
+            size="small"
+            type="success"
+            icon="el-icon-download"
+            circle
+            @click="downloadFile(scope.row.id)"
+          ></el-button>
+          <!-- 重命名 -->
+          <el-button
+            size="small"
+            type="warning"
+            icon="el-icon-edit"
+            circle
+          ></el-button>
+          <!-- 删除 -->
+          <el-button
+            size="small"
+            type="danger"
+            icon="el-icon-delete"
+            circle
+            @click="deleteFile(scope.row.id)"
+          ></el-button>
         </template>
       </el-table-column>
     </el-table>
     <div class="el-dropdown-link">
-      <el-dropdown placement="top" trigger="click" @visible-change="rotateDiv" :hide-on-click="false">
+      <el-dropdown
+        placement="top"
+        trigger="click"
+        @visible-change="rotateDiv"
+        :hide-on-click="false"
+      >
         <span>
           <button class="feba-toggle" ref="rotateDiv" type="button">
             <span><i class="el-icon-plus" style="font-weight: 800"></i></span>
@@ -66,16 +121,26 @@
             <el-tooltip placement="left" content="创建文件夹">
               <button class="feba-toggle_item" type="button" @click="showInput">
                 <span>
-                  <i class="el-icon-folder-add" style="font-weight: 800; color: #fff"></i>
+                  <i
+                    class="el-icon-folder-add"
+                    style="font-weight: 800; color: #fff"
+                  ></i>
                 </span>
               </button>
             </el-tooltip>
           </el-dropdown-item>
           <el-dropdown-item>
             <el-tooltip placement="left" content="上传文件">
-              <button class="feba-toggle_item" type="button" @click="dialogVisible = true">
+              <button
+                class="feba-toggle_item"
+                type="button"
+                @click="dialogVisible = true"
+              >
                 <span>
-                  <i class="el-icon-upload2" style="font-weight: 800; color: #fff"></i>
+                  <i
+                    class="el-icon-upload2"
+                    style="font-weight: 800; color: #fff"
+                  ></i>
                 </span>
               </button>
             </el-tooltip>
@@ -88,7 +153,9 @@
       <Upload :folderId="folderId"></Upload>
       <span slot="footer" class="dialog-footer">
         <el-button @click="dialogVisible = false">取 消</el-button>
-        <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
+        <el-button type="primary" @click="dialogVisible = false"
+          >确 定</el-button
+        >
       </span>
     </el-dialog>
 
@@ -101,8 +168,14 @@
           <div class="modal-body">
             <form>
               <div class="input-group">
-                <input type="text" class="ig-text" placeholder="文件夹名字" value ref="CreateFolder"
-                  @keyup.enter="createFolder" />
+                <input
+                  type="text"
+                  class="ig-text"
+                  placeholder="文件夹名字"
+                  value
+                  ref="CreateFolder"
+                  @keyup.enter="createFolder"
+                />
                 <span class="border"></span>
               </div>
             </form>
@@ -135,7 +208,7 @@
   z-index: 3000;
 }
 
-.input-group input:focus+.border {
+.input-group input:focus + .border {
   left: 0;
   right: 0;
 }
@@ -333,7 +406,13 @@
 </style>
 
 <script>
-import { getFileOrFolder, createNewFolder, deleteFile, deleteFolder, filePreview } from "@/api/user";
+import {
+  getFileOrFolder,
+  createNewFolder,
+  deleteFile,
+  deleteFolder,
+  filePreview,
+} from "@/api/user";
 import Upload from "@/components/Upload";
 export default {
   components: { Upload },
@@ -423,18 +502,19 @@ export default {
       deleteFile(fileId).then((resp) => {
         this.$message({
           message: resp.message,
-          type: 'success'
-        })
+          type: "success",
+        });
         this.flushFile();
-      })
+      });
     },
 
     downloadFile(fileId) {
-      const link = document.createElement('a') // 创建a标签
-      link.href = `http://localhost:9528/shadow-api/management/file/download?fileId=${fileId}` // 设置a标签的href属性
-      document.body.appendChild(link) // 将a标签添加到页面中
-      link.click() // 模拟a标签的点击事件
-      document.body.removeChild(link) // 移除a标签
+      const link = document.createElement("a"); // 创建a标签
+      link.href = `http://localhost:9528/shadow-api/management/file/download?fileId=${fileId}`; // 设置a标签的href属性
+      document.body.appendChild(link); // 将a标签添加到页面中
+      link.click(); // 模拟a标签的点击事件
+      document.body.removeChild(link); // 移除a标签
+      this.flushFile();
     },
 
     // 刷新文件操作
@@ -445,7 +525,28 @@ export default {
         this.content = resp.data.content;
         this.listLoading = false;
       });
-    }
+    },
+
+    filePreview(fileId) {
+      filePreview(fileId).then((resp) => {
+        const isPreview = resp.data.is_preview;
+        if (!isPreview) {
+          this.$message({
+            message: "该文件暂不可预览,请下载自行查看",
+            type: "warning",
+          });
+          return;
+        }
+        // 分享链接
+        const fileUrl = resp.data.file_url;
+        const link = document.createElement("a");
+        link.href = fileUrl;
+        link.target = "_blank";
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      });
+    },
   },
 };
 </script>
