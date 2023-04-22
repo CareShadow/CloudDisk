@@ -25,7 +25,7 @@
       <el-table-column label="名称">
         <template slot-scope="scope">
           <svg-icon
-            :icon-class="scope.row.type == null ? 'folder' : 'word'"
+            :icon-class="judgeFileType(scope.row.type)"
             class-name="tableicon-class"
           ></svg-icon>
           {{ scope.row.name }}
@@ -515,6 +515,12 @@ export default {
       link.click(); // 模拟a标签的点击事件
       document.body.removeChild(link); // 移除a标签
       this.flushFile();
+    },
+
+    judgeFileType(fileType){
+      const fileTypes = ['jpg', 'video', 'word', 'ppt', 'excel', 'pdf', 'audio', 'unknown'];
+      if(fileType == null) return 'folder';
+      else return fileTypes[fileType - 1];
     },
 
     // 刷新文件操作
