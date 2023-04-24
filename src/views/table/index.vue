@@ -38,7 +38,7 @@
       </el-table-column>
       <el-table-column label="大小" width="110" align="center">
         <template slot-scope="scope">
-          {{ scope.row.size }}
+          {{ scope.row.size }} <span v-show="scope.row.size != null">KB</span>
         </template>
       </el-table-column>
       <el-table-column label="下载次数" width="110" align="center">
@@ -153,7 +153,7 @@
       <Upload :folderId="folderId"></Upload>
       <span slot="footer" class="dialog-footer">
         <el-button @click="dialogVisible = false">取 消</el-button>
-        <el-button type="primary" @click="dialogVisible = false"
+        <el-button type="primary" @click="uploadFileDown()"
           >确 定</el-button
         >
       </span>
@@ -531,6 +531,11 @@ export default {
         this.content = resp.data.content;
         this.listLoading = false;
       });
+    },
+
+    uploadFileDown() {
+      this.dialogVisible = false;
+      this.flushFile();
     },
 
     filePreview(fileId) {

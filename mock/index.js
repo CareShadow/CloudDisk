@@ -2,11 +2,9 @@ const Mock = require('mockjs')
 const { param2Obj } = require('./utils')
 
 const user = require('./user')
-const table = require('./table')
 
 const mocks = [
-  ...user,
-  ...table
+  ...user
 ]
 
 // for front mock
@@ -21,7 +19,7 @@ function mockXHR() {
       this.custom.xhr.withCredentials = this.withCredentials || false
 
       if (this.responseType) {
-        this.custom.xhr.responseType = this.responseType
+        this.custom.xhr.responseType = this.respoparam2ObjnseType
       }
     }
     this.proxy_send(...arguments)
