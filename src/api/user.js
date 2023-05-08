@@ -40,7 +40,7 @@ export function getFileOrFolder(folderId) {
     baseURL: '/shadow-api',
     url: '/management/file/list',
     method: 'get',
-    params: {folderId},
+    params: { folderId },
   })
 }
 
@@ -71,7 +71,7 @@ export function deleteFolder(folderId) {
     baseURL: '/shadow-api',
     url: '/management/folder/delete',
     method: 'get',
-    params: {folderId},
+    params: { folderId },
   })
 }
 
@@ -91,7 +91,7 @@ export function deleteFile(fileId) {
     baseURL: '/shadow-api',
     url: '/management/file/delete',
     method: 'get',
-    params: {fileId},
+    params: { fileId },
   })
 }
 
@@ -101,7 +101,7 @@ export function downloadFile(fileId) {
     baseURL: '/shadow-api',
     url: '/management/file/download',
     method: 'get',
-    params: {fileId},
+    params: { fileId },
   })
 }
 
@@ -111,6 +111,32 @@ export function filePreview(fileId) {
     baseURL: '/shadow-api',
     url: '/management/file/preview',
     method: 'get',
-    params: {fileId},
+    params: { fileId },
+  })
+}
+
+// 用户列表
+export function getUserList() {
+  return request({
+    baseURL: '/shadow-api',
+    url: '/management/user/list',
+    method: 'get',
+  })
+}
+
+// 更新用户角色
+export function updateUserRole(data) {
+  return request({
+    baseURL: '/shadow-api',
+    url: `/management/user/role_change/${data.userId}/${data.roleId}`,
+    method: 'post',
+  })
+}
+
+export function getAllRoleName() {
+  return request({
+    baseURL: '/shadow-api',
+    url: '/management/user/role_list',
+    method: 'get'
   })
 }

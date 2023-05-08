@@ -69,9 +69,9 @@ export const constantRoutes = [
         meta: { title: '文件目录', icon: 'table' }
       },
       {
-        path: 'preview',
-        name: 'preview',
-        component: () => import("@/views/preview/index"),
+        path: 'user',
+        name: 'user',
+        component: () => import("@/views/user/index"),
         meta: { title: '文件预览', icon: 'link' }
       }
     ]

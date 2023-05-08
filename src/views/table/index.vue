@@ -93,13 +93,23 @@
             icon="el-icon-edit"
             circle
           ></el-button>
-          <!-- 删除 -->
+          <!-- 文件删除 -->
           <el-button
+            v-show="!(scope.row.type == null)"
             size="small"
             type="danger"
             icon="el-icon-delete"
             circle
             @click="deleteFile(scope.row.id)"
+          ></el-button>
+          <!-- 文件夹删除 -->
+          <el-button
+            v-show="scope.row.type == null"
+            size="small"
+            type="danger"
+            icon="el-icon-delete"
+            circle
+            @click="deleteFolder(scope.row.id)"
           ></el-button>
         </template>
       </el-table-column>
@@ -506,6 +516,16 @@ export default {
         });
         this.flushFile();
       });
+    },
+
+    deleteFolder(folderId) {
+      deleteFolder(folderId).then((resp) => {
+        this.$message({
+          message: resp.message,
+          type: "success",
+        })
+        this.flushFile();
+      })
     },
 
     downloadFile(fileId) {
