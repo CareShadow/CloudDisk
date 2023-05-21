@@ -27,7 +27,7 @@ export function logout() {
 export function merge(data) {
   return request({
     baseURL: '/shadow-api',
-    url: '/slice/merge',
+    url: '/management/slice/merge',
     timeout: 60000,
     method: 'post',
     params: data
@@ -133,10 +133,38 @@ export function updateUserRole(data) {
   })
 }
 
+// 获取用户名字
 export function getAllRoleName() {
   return request({
     baseURL: '/shadow-api',
     url: '/management/user/role_list',
     method: 'get'
+  })
+}
+
+// 获取当前角色关联的资源
+export function getRoleMapResource() {
+  return request({
+    baseURL: '/shadow-api',
+    url: '/management/user/resource_list',
+    method: 'get'
+  })
+}
+
+// 获取全部可配置的资源
+export function getAllResource() {
+  return request({
+    baseURL: '/shadow-api',
+    url: '/management/user/resource',
+    method: 'get'
+  })
+}
+
+// 添加用户
+export function addUser(username) {
+  return request({
+    baseURL: '/shadow-api',
+    url: `/management/user/add/${username}`,
+    method: 'post'
   })
 }

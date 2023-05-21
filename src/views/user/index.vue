@@ -2,6 +2,7 @@
   <div class="app-container">
     <el-button @click="resetDateFilter">清除日期过滤器</el-button>
     <el-button @click="clearFilter">清除所有过滤器</el-button>
+    <el-button @click="handlerAddUser">添加</el-button>
     <el-table
       ref="filterTable"
       :data="
@@ -105,7 +106,12 @@
 </template>
 
 <script>
-import { getUserList, updateUserRole, getAllRoleName } from "@/api/user";
+import {
+  getUserList,
+  updateUserRole,
+  getAllRoleName,
+  addUser,
+} from "@/api/user";
 export default {
   data() {
     return {
@@ -155,7 +161,6 @@ export default {
       for (let item of resp.data) {
         this.options.push({ label: item.roleName, value: item.roleId });
       }
-      console.log(this.options);
     });
   },
   methods: {
@@ -200,6 +205,43 @@ export default {
         });
       });
       this.value = "";
+    },
+    handlerAddUser() {
+      this.$prompt("请输入用户名", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        inputPattern: /^[a-zA-Z]{4,8}$/,
+        inputValidator: (value) => {
+          const flag =  this.tableData.some((item) => item.userName === value);
+          if(flag) return '该用户名重复'
+        },
+        inputErrorMessage: "4 到 8 个英文字母",
+      })
+        .then(({ value }) => {
+          addUser(value).then((resp) => {
+            this.$message({
+              type: "success",
+              message: resp.message,
+            });
+            this.flushPage();
+          });
+        })
+        .catch(() => {
+          this.$message({
+            type: "info",
+            message: "取消输入",
+          });
+        });
+    },
+    handleDelete() {},
+    // 刷新页面
+    flushPage() {
+      getUserList().then((resp) => {
+        for (let item of resp.data) {
+          item.showDetails = false;
+        }
+        this.tableData = resp.data;
+      });
     },
   },
 };

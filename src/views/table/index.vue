@@ -88,10 +88,12 @@
           ></el-button>
           <!-- 重命名 -->
           <el-button
+            v-show="scope.row.type == null"
             size="small"
             type="warning"
             icon="el-icon-edit"
             circle
+           @click="handleRenameFolder(scope.row)"
           ></el-button>
           <!-- 文件删除 -->
           <el-button
@@ -163,9 +165,7 @@
       <Upload :folderId="folderId"></Upload>
       <span slot="footer" class="dialog-footer">
         <el-button @click="dialogVisible = false">取 消</el-button>
-        <el-button type="primary" @click="uploadFileDown()"
-          >确 定</el-button
-        >
+        <el-button type="primary" @click="uploadFileDown()">确 定</el-button>
       </span>
     </el-dialog>
 
@@ -422,6 +422,7 @@ import {
   deleteFile,
   deleteFolder,
   filePreview,
+  renameFolder
 } from "@/api/user";
 import Upload from "@/components/Upload";
 export default {
@@ -523,9 +524,9 @@ export default {
         this.$message({
           message: resp.message,
           type: "success",
-        })
+        });
         this.flushFile();
-      })
+      });
     },
 
     downloadFile(fileId) {
@@ -537,9 +538,18 @@ export default {
       this.flushFile();
     },
 
-    judgeFileType(fileType){
-      const fileTypes = ['jpg', 'video', 'word', 'ppt', 'excel', 'pdf', 'audio', 'unknown'];
-      if(fileType == null) return 'folder';
+    judgeFileType(fileType) {
+      const fileTypes = [
+        "jpg",
+        "video",
+        "word",
+        "ppt",
+        "excel",
+        "pdf",
+        "audio",
+        "unknown",
+      ];
+      if (fileType == null) return "folder";
       else return fileTypes[fileType - 1];
     },
 
@@ -578,6 +588,9 @@ export default {
         document.body.removeChild(link);
       });
     },
+    handleRenameFolder(row) {
+      
+    }
   },
 };
 </script>

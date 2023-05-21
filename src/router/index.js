@@ -54,13 +54,15 @@ export const constantRoutes = [
       meta: { title: '系统主页', icon: 'word' }
     }]
   },
+  // 404 page must be placed at the end !!!
+  { path: '*', redirect: '/404', hidden: true }
+]
 
+export const asyncRoutes = [
   {
     path: '/example',
     component: Layout,
     redirect: '/example/table',
-    name: 'Example',
-    meta: { title: '实例页面', icon: 'el-icon-s-help' },
     children: [
       {
         path: 'table',
@@ -68,15 +70,29 @@ export const constantRoutes = [
         component: () => import('@/views/table/index'),
         meta: { title: '文件目录', icon: 'table' }
       },
+    ]
+  },
+  {
+    path: '/admin',
+    component: Layout,
+    redirect: '/admin/user',
+    name: 'Admin',
+    meta: { title: '管理目录', icon: 'el-icon-s-help', roles: ['editor'] },
+    children: [
       {
         path: 'user',
         name: 'user',
         component: () => import("@/views/user/index"),
-        meta: { title: '文件预览', icon: 'link' }
+        meta: { title: '用户管理', icon: 'link'},
+      },
+      {
+        path: 'role',
+        name: 'role',
+        component: () => import("@/views/role/index"),
+        meta: { title: '角色管理', icon: 'link'},
       }
     ]
   },
-
   {
     path: 'external-link',
     component: Layout,
@@ -85,13 +101,8 @@ export const constantRoutes = [
         path: 'https://panjiachen.github.io/vue-element-admin-site/#/',
         meta: { title: 'External Link', icon: 'link' }
       },
-      
     ]
   },
-  
-
-  // 404 page must be placed at the end !!!
-  { path: '*', redirect: '/404', hidden: true }
 ]
 
 const createRouter = () => new Router({

@@ -15,12 +15,14 @@
 <script>
 import sparkMD5 from "spark-md5";
 import { merge } from "@/api/user"
+import store from '@/store'
+import { getToken } from '@/utils/auth'
 export default {
   props: ['folderId'],
   data() {
     return {
       options: {
-        target: "/shadow-api/slice/chunk", // 上传路径
+        target: "/shadow-api/management/slice/chunk", // 上传路径
         chunkSize: "2048000", // 分块大小
         fileParameterName: "file", // 上传参数
         maxChunkRetries: 3, // 重试次数
@@ -32,6 +34,11 @@ export default {
             return true;
           }
           return (objectMessage.uploaded || []).indexOf(chunk.offset + 1) >= 0;
+        },
+        headers: () => {
+          if(store.getters.token) {
+            return {'Authorization': getToken()}
+          }
         },
         // 额外的自定义查询参数
         query: (file, chunk) => {
